@@ -114,7 +114,7 @@ static INLINE __m128i xx_roundn_epi16(__m128i v_val_d, int32_t bits) {
 // indx: imm8 (0 - 15)
 //#if _MSC_VER <= 1900
 #ifdef _WIN32
-#if _MSC_VER < 1910
+#if defined(_MSC_VER) && _MSC_VER < 1910
 #define _mm256_insert_epi16(a, d, indx)                                      \
   _mm256_insertf128_si256(                                                   \
       a,                                                                     \

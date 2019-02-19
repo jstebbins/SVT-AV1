@@ -2726,7 +2726,7 @@ void intra_mode_angular_34_avx2_intrin(
 
 // only define these intrinsics if immintrin.h doesn't have them 
 #ifdef _WIN32
-#if _MSC_VER < 1910
+#if defined(_MSC_VER) && _MSC_VER < 1910
 static inline int32_t _mm256_extract_epi32(__m256i a, const int32_t i)
 {
     return a.m256i_i32[i & 7];

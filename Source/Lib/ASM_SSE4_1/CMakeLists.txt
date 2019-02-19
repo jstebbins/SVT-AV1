@@ -14,9 +14,9 @@ include_directories (${PROJECT_SOURCE_DIR}/Source/Lib/ASM_SSSE3/)
 include_directories (${PROJECT_SOURCE_DIR}/Source/Lib/ASM_SSE4_1/)
 include_directories (${PROJECT_SOURCE_DIR}/Source/Lib/ASM_AVX2/)
 
-if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+if(NOT MINGW AND ${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     SET(CMAKE_C_FLAGS "/MP")    
-endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+endif()
 
 if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -msse4.1")

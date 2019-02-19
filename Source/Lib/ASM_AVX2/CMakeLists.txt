@@ -17,7 +17,7 @@ include_directories(${PROJECT_SOURCE_DIR}/Source/Lib/ASM_AVX2/)
 link_directories(${PROJECT_SOURCE_DIR}/Source/Lib/ASM_SSSE3/)
 
 
-if(UNIX)
+if(UNIX OR MINGW)
     # Intel Linux
     if("${CMAKE_C_COMPILER_ID}" STREQUAL "Intel")
         SET(CMAKE_C_FLAGS "-fPIC -static-intel -w")

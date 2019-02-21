@@ -150,6 +150,8 @@ extern "C" {
 #else
 #define PAD_VALUE                                (128+32)
 #endif
+#define BUFFER_ALIGN                              64
+#define BUFFER_ALIGN_MASK                        (~(BUFFER_ALIGN-1))
 
 //  Delta QP support
 #define ADD_DELTA_QP_SUPPORT                      0  // Add delta QP support - Please enable this flag and iproveSharpness (config) to test the QPM

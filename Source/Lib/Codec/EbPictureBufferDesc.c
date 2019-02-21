@@ -48,14 +48,15 @@ EbErrorType EbPictureBufferDescCtor(
     pictureBufferDescPtr->width = pictureBufferDescInitDataPtr->maxWidth;
     pictureBufferDescPtr->height = pictureBufferDescInitDataPtr->maxHeight;
     pictureBufferDescPtr->bit_depth = pictureBufferDescInitDataPtr->bit_depth;
-    pictureBufferDescPtr->strideY = pictureBufferDescInitDataPtr->maxWidth + pictureBufferDescInitDataPtr->left_padding + pictureBufferDescInitDataPtr->right_padding;
-    pictureBufferDescPtr->strideCb = pictureBufferDescPtr->strideCr = pictureBufferDescPtr->strideY >> 1;
+    pictureBufferDescPtr->strideY = (pictureBufferDescInitDataPtr->maxWidth + pictureBufferDescInitDataPtr->left_padding + pictureBufferDescInitDataPtr->right_padding + BUFFER_ALIGN - 1) & BUFFER_ALIGN_MASK;
+    pictureBufferDescPtr->strideCb = pictureBufferDescPtr->strideCr = ((pictureBufferDescPtr->strideY >> 1) + BUFFER_ALIGN - 1) & BUFFER_ALIGN_MASK;
     pictureBufferDescPtr->origin_x = pictureBufferDescInitDataPtr->left_padding;
     pictureBufferDescPtr->origin_y = pictureBufferDescInitDataPtr->top_padding;
 
-    pictureBufferDescPtr->lumaSize = (pictureBufferDescInitDataPtr->maxWidth + pictureBufferDescInitDataPtr->left_padding + pictureBufferDescInitDataPtr->right_padding) *
+    pictureBufferDescPtr->lumaSize = pictureBufferDescPtr->strideY *
         (pictureBufferDescInitDataPtr->maxHeight + pictureBufferDescInitDataPtr->top_padding + pictureBufferDescInitDataPtr->bot_padding);
-    pictureBufferDescPtr->chromaSize = pictureBufferDescPtr->lumaSize >> 2;
+    pictureBufferDescPtr->chromaSize = pictureBufferDescPtr->strideCb *
+        (pictureBufferDescInitDataPtr->maxHeight + pictureBufferDescInitDataPtr->top_padding + pictureBufferDescInitDataPtr->bot_padding) >> 1;
     pictureBufferDescPtr->packedFlag = EB_FALSE;
 
     if (pictureBufferDescInitDataPtr->splitMode == EB_TRUE) {

@@ -231,8 +231,8 @@ void InitThreadManagmentParams() {
 #else
     const char* PROCESSORID = "processor";
     const char* PHYSICALID = "physical id";
-    int processor_id_len = strnlen_ss(PROCESSORID, 128);
-    int physical_id_len = strnlen_ss(PHYSICALID, 128);
+    int processor_id_len = strnlen(PROCESSORID, 128);
+    int physical_id_len = strnlen(PHYSICALID, 128);
     if (processor_id_len < 0 || processor_id_len >= 128) return EB_ErrorInsufficientResources;
     if (physical_id_len < 0 || physical_id_len >= 128) return EB_ErrorInsufficientResources;
     memset(lp_group, 0, sizeof(lp_group));

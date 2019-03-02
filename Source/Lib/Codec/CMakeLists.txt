@@ -4,6 +4,8 @@
 # 
 # EncoderLib Directory CMakeLists.txt
 
+option(ENABLE_SHARED "Build shared library" ON)
+
 # Include Encoder Subdirectories
 include_directories (${PROJECT_SOURCE_DIR}/Source/API/)
 include_directories (${PROJECT_SOURCE_DIR}/Source/Lib/Codec/)
@@ -31,31 +33,40 @@ file(GLOB all_files
     "*.h"
     "*.c")
  
-# Encoder Lib Source Files
-add_library(SvtAv1Enc SHARED
-    ${all_files}
-)
-    
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-target_link_libraries(SvtAv1Enc
-    C_DEFAULT
-    ASM_SSE2
-    ASM_SSSE3
-    ASM_SSE4_1
-    ASM_AVX2
-    m)
-else()
-target_link_libraries(SvtAv1Enc
-    C_DEFAULT
-    ASM_SSE2
-    ASM_SSSE3
-    ASM_SSE4_1
-    ASM_AVX2)
+if(UNIX)
+    list(APPEND PLATFORM_LIBS pthread m)
 endif()
 
 if(NOT DEFINED CMAKE_INSTALL_LIBDIR)
     set(CMAKE_INSTALL_LIBDIR "lib")
 endif()
+
+if(ENABLE_SHARED)
+    # Encoder Lib Source Files
+    add_library(SvtAv1EncShared SHARED
+        ${all_files}
+        $<TARGET_OBJECTS:C_DEFAULT>
+        $<TARGET_OBJECTS:ASM_SSE2>
+        $<TARGET_OBJECTS:ASM_SSSE3>
+        $<TARGET_OBJECTS:ASM_SSE4_1>
+        $<TARGET_OBJECTS:ASM_AVX2>
+    )
+    set_target_properties(SvtAv1EncShared PROPERTIES OUTPUT_NAME SvtAv1Enc)
+    target_link_libraries(SvtAv1EncShared ${PLATFORM_LIBS})
+    install(TARGETS SvtAv1EncShared DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+endif(ENABLE_SHARED)
+
+add_library(SvtAv1EncStatic STATIC
+    ${all_files}
+    $<TARGET_OBJECTS:C_DEFAULT>
+    $<TARGET_OBJECTS:ASM_SSE2>
+    $<TARGET_OBJECTS:ASM_SSSE3>
+    $<TARGET_OBJECTS:ASM_SSE4_1>
+    $<TARGET_OBJECTS:ASM_AVX2>
+)
+set_target_properties(SvtAv1EncStatic PROPERTIES OUTPUT_NAME SvtAv1Enc)
+target_link_libraries(SvtAv1EncStatic ${PLATFORM_LIBS})
+install(TARGETS SvtAv1EncStatic DESTINATION "${CMAKE_INSTALL_LIBDIR}")
 
 if(NOT DEFINED CMAKE_INSTALL_INCLUDEDIR)
     set(CMAKE_INSTALL_INCLUDEDIR "include/svt-av1")
@@ -63,5 +74,4 @@ endif()
     
 configure_file(../pkg-config.pc.in ${CMAKE_BINARY_DIR}/SvtAv1Enc.pc @ONLY)
 install(FILES ${CMAKE_BINARY_DIR}/SvtAv1Enc.pc DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
-install(TARGETS SvtAv1Enc DESTINATION "${CMAKE_INSTALL_LIBDIR}")
 install(DIRECTORY ../../API/ DESTINATION "${CMAKE_INSTALL_PREFIX}/include/svt-av1" FILES_MATCHING PATTERN "*.h")

@@ -28,9 +28,7 @@ file(GLOB all_files
     "*.asm"
     "*.c")
 
-add_library(ASM_SSE2
-    ${all_files}
-)
+add_library(ASM_SSE2 OBJECT ${all_files})
 
 
 

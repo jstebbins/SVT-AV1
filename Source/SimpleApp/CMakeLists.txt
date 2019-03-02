@@ -24,13 +24,19 @@ add_executable (SvtAv1EncSimpleApp
 
 #********** SET COMPILE FLAGS************
 
+if(ENABLE_SHARED)
+    set (SvtAv1EncLib SvtAv1EncShared)
+else()
+    set (SvtAv1EncLib SvtAv1EncStatic)
+endif()
+
 if (UNIX)
     # Configure the RPATH to allow relative runtime linking
     INSTALL(TARGETS SvtAv1EncSimpleApp RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}/bin/")
 
     # Link the Encoder App
     target_link_libraries (SvtAv1EncSimpleApp
-        SvtAv1Enc
+        ${SvtAv1EncLib}
         pthread
         m)
 endif()
@@ -38,5 +44,5 @@ endif()
 if (MSVC OR MSYS OR MINGW OR WIN32)
     # Link the Encoder App
     target_link_libraries (SvtAv1EncSimpleApp
-                           SvtAv1Enc)
+                           ${SvtAv1EncLib})
 endif()

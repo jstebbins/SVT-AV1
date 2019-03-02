@@ -45,6 +45,12 @@ file(GLOB all_files
     "../Source/Lib/Codec/grainSynthesis.h"
     "../Source/Lib/Codec/grainSynthesis.c")
 
+if(ENABLE_SHARED)
+    set (SvtAv1EncLib SvtAv1EncShared)
+else()
+    set (SvtAv1EncLib SvtAv1EncStatic)
+endif()
+
 if (UNIX)
   # App Source Files
     add_executable (SvtAv1UnitTests 
@@ -52,7 +58,7 @@ if (UNIX)
 
     # Link the Encoder App
      target_link_libraries (SvtAv1UnitTests
-        SvtAv1Enc
+        ${SvtAv1EncLib}
         gtest_all 
         pthread
         m)
@@ -60,7 +66,7 @@ endif(UNIX)
 
 if (MSVC OR MSYS OR MINGW OR WIN32)
   
-    set (lib_list SvtAv1Enc gtest_all)
+    set (lib_list ${SvtAv1EncLib} gtest_all)
     cxx_executable_with_flags(SvtAv1UnitTests "${cxx_default}"
       "${lib_list}" ${all_files})
 

@@ -38,9 +38,7 @@ file(GLOB all_files
     "*.asm"
     "*.c")
 
-add_library(ASM_AVX2
-    ${all_files}
-)
+add_library(ASM_AVX2 OBJECT ${all_files})
 
 
 

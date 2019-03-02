@@ -4,6 +4,7 @@
 */
 
 #include "EbAppInputy4m.h"
+#include "EbString.h"
 #define YFM_HEADER_MAX 80
 #define YUV4MPEG2_IND_SIZE 9
 #define PRINT_HEADER 0

@@ -508,7 +508,7 @@ extern void RunEmms();
 
 #define INLINE __inline
 #define RESTRICT
-#ifdef _MSC_VER
+#ifdef _WIN32
 #define FOPEN(f,s,m) fopen_s(&f,s,m)
 #else
 #define FOPEN(f,s,m) f=fopen(s,m)
@@ -2492,7 +2492,7 @@ app_malloc_count++;
 
 #define ALVALUE 32
 #if MEM_MAP_OPT
-#ifdef _MSC_VER
+#ifdef _WIN32
 #define EB_ALLIGN_MALLOC(type, pointer, n_elements, pointer_class) \
     pointer = (type) _aligned_malloc(n_elements,ALVALUE); \
     if (pointer == (type)EB_NULL) \
@@ -2606,7 +2606,7 @@ app_malloc_count++;
         lib_mutex_count++;\
     }
 #else
-#ifdef _MSC_VER
+#ifdef _WIN32
 #define EB_ALLIGN_MALLOC(type, pointer, n_elements, pointer_class) \
 pointer = (type) _aligned_malloc(n_elements,ALVALUE); \
 if (pointer == (type)EB_NULL) { \

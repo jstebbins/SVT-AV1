@@ -13,9 +13,9 @@ include_directories (${PROJECT_SOURCE_DIR}/Source/Lib/Common/ASM_SSSE3/)
 include_directories (${PROJECT_SOURCE_DIR}/Source/Lib/Common/ASM_SSE4_1/)
 include_directories (${PROJECT_SOURCE_DIR}/Source/Lib/Common/ASM_AVX2/)
 
-if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+if(NOT MINGW AND ${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     SET(CMAKE_C_FLAGS "/MP")    
-endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+endif()
 
 file(GLOB all_files
     "*.h"

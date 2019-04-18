@@ -81,9 +81,21 @@ if (UNIX)
         gtest_all
         pthread
         m)
-endif(UNIX)
+elseif (MINGW)
+    # App Source Files
+    add_executable (SvtAv1UnitTests
+      ${all_files})
 
-if (MSVC OR MSYS OR MINGW OR WIN32)
+    # Link the Encoder App
+    target_link_libraries (SvtAv1UnitTests
+        COMMON_CODEC
+        COMMON_C_DEFAULT
+        COMMON_ASM_SSE2
+        COMMON_ASM_SSSE3
+        COMMON_ASM_SSE4_1
+        COMMON_ASM_AVX2
+        gtest_all)
+elseif (MSVC OR MSYS OR WIN32)
     set (lib_list
     $<TARGET_OBJECTS:COMMON_CODEC>
     $<TARGET_OBJECTS:COMMON_C_DEFAULT>
@@ -98,8 +110,7 @@ if (MSVC OR MSYS OR MINGW OR WIN32)
     set_target_properties(SvtAv1UnitTests
                         PROPERTIES
                         COMPILE_DEFINITIONS "GTEST_LINKED_AS_SHARED_LIBRARY=1")
-
-endif(MSVC OR MSYS OR MINGW OR WIN32)
+endif()
 
 install(TARGETS SvtAv1UnitTests RUNTIME DESTINATION bin)
 

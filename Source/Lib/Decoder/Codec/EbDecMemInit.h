@@ -16,7 +16,7 @@ extern uint64_t                         *svt_dec_total_lib_memory;
 extern uint32_t                         svt_dec_lib_malloc_count;
 
 #if MEM_MAP_OPT
-#ifdef _MSC_VER
+#ifdef _WIN32
 #define EB_ALLIGN_MALLOC_DEC(type, pointer, n_elements, pointer_class) \
     pointer = (type) _aligned_malloc(n_elements,ALVALUE); \
     if (pointer == (type)EB_NULL) \
@@ -75,7 +75,7 @@ extern uint32_t                         svt_dec_lib_malloc_count;
     }
 
 #else
-#ifdef _MSC_VER
+#ifdef _WIN32
 #define EB_ALLIGN_MALLOC_DEC(type, pointer, n_elements, pointer_class) \
 pointer = (type) _aligned_malloc(n_elements,ALVALUE); \
 if (pointer == (type)EB_NULL) { \

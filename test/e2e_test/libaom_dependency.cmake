@@ -1,6 +1,6 @@
 include(ExternalProject)
 #/property:Configuration=${CMAKE_BUILD_TYPE} ${CMAKE_BINARY_DIR}/libaom/src/DepLibAom-build/
-if (MSVC OR MSYS OR MINGW OR WIN32)
+if ((MSVC OR MSYS OR WIN32) AND NOT MINGW)
 set(TARGET_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/aom/lib/msvc)
 set(CUSTOM_CONFIG -G "Visual Studio 15 2017 Win64")
 set(CUSTOM_BUILD_CMD msbuild /p:Configuration=MinSizeRel AOM.sln
@@ -18,8 +18,20 @@ set(CUSTOM_POST_BUILD COMMAND ${CMAKE_COMMAND} -E make_directory ${TARGET_OUTPUT
                       COMMAND ${CMAKE_COMMAND} -E make_directory ${TARGET_OUTPUT_PATH}/Debug/
                       COMMAND ${CMAKE_COMMAND} -E copy
                        ${CMAKE_BINARY_DIR}/libaom/src/DepLibAom-build/Debug/aom.lib ${TARGET_OUTPUT_PATH}/Debug/)
-endif(MSVC OR MSYS OR MINGW OR WIN32)
+endif ((MSVC OR MSYS OR WIN32) AND NOT MINGW)
 
+if (MINGW)
+set(TARGET_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/aom/lib/mingw)
+set(TARGET "libaom.a")
+install(FILES ${CMAKE_BINARY_DIR}/libaom/src/DepLibAom-build/libaom.a DESTINATION lib)
+# libaom does not currently support Windows DLL builds
+set(CUSTOM_CONFIG "-DBUILD_SHARED_LIBS=0"
+                  "-DCMAKE_TOOLCHAIN_FILE=${CMAKE_BINARY_DIR}/libaom/src/DepLibAom/build/cmake/toolchains/x86_64-mingw-gcc.cmake")
+set(CUSTOM_BUILD_CMD make aom)
+set(CUSTOM_POST_BUILD COMMAND ${CMAKE_COMMAND} -E make_directory ${TARGET_OUTPUT_PATH}
+                      COMMAND ${CMAKE_COMMAND} -E copy
+                       ${CMAKE_BINARY_DIR}/libaom/src/DepLibAom-build/${TARGET} ${TARGET_OUTPUT_PATH})
+endif (MINGW)
 
 if (UNIX AND NOT APPLE)
 set(TARGET_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/aom/lib/linux)
@@ -41,9 +53,7 @@ set(CUSTOM_BUILD_CMD make aom)
 set(CUSTOM_POST_BUILD COMMAND ${CMAKE_COMMAND} -E make_directory ${TARGET_OUTPUT_PATH}
                       COMMAND ${CMAKE_COMMAND} -E copy
                        ${CMAKE_BINARY_DIR}/libaom/src/DepLibAom-build/${TARGET} ${TARGET_OUTPUT_PATH})
-
-
-endif(UNIX)
+endif (UNIX)
 
 
 ExternalProject_Add(DepLibAom

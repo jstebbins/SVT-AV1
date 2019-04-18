@@ -56,11 +56,19 @@ if (UNIX)
         pthread
         m)
         
-endif(UNIX)
+elseif (MINGW)
 
-if (MSVC OR MSYS OR MINGW OR WIN32)
+    # App Source Files
+    add_executable (SvtAv1ApiTests ${all_files})
 
-    set (lib_list SvtAv1Enc gtest_all)
+    # Link the Encoder App
+    target_link_libraries (SvtAv1ApiTests
+        ${SvtAv1EncLib}
+        gtest_all)
+
+elseif (MSVC OR MSYS OR WIN32)
+
+    set (lib_list ${SvtAv1EncLib} gtest_all)
                         
     cxx_executable_with_flags(SvtAv1ApiTests "${cxx_default}"
       "${lib_list}" ${all_files})
@@ -68,7 +76,7 @@ if (MSVC OR MSYS OR MINGW OR WIN32)
     set_target_properties(SvtAv1ApiTests
                         PROPERTIES
                         COMPILE_DEFINITIONS "GTEST_LINKED_AS_SHARED_LIBRARY=1")
-endif(MSVC OR MSYS OR MINGW OR WIN32)
+endif()
 
 install(TARGETS SvtAv1ApiTests RUNTIME DESTINATION bin)
 

@@ -11,9 +11,9 @@ include_directories (${PROJECT_SOURCE_DIR}/Source/Lib/Common/Codec/)
 include_directories (${PROJECT_SOURCE_DIR}/Source/Lib/Common/C_DEFAULT/)
 include_directories (${PROJECT_SOURCE_DIR}/Source/Lib/Common/ASM_SSE2/)
 
-if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+if(NOT MINGW AND ${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     SET(CMAKE_C_FLAGS "/MP")    
-endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+endif()
 
 if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -msse2")

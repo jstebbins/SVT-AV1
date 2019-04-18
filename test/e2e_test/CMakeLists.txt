@@ -21,9 +21,12 @@ include_directories(${PROJECT_SOURCE_DIR}/third_party/aom/inc)
 include_directories(${PROJECT_SOURCE_DIR}/Source/API)
 
 # Link Subdirectories
-if (MSVC OR MSYS OR MINGW OR WIN32)
+if ((MSVC OR MSYS OR WIN32) AND NOT MINGW)
 link_directories(${PROJECT_SOURCE_DIR}/third_party/aom/lib/msvc)
-endif(MSVC OR MSYS OR MINGW OR WIN32)
+endif ((MSVC OR MSYS OR WIN32) AND NOT MINGW)
+if (MINGW)
+link_directories(${PROJECT_SOURCE_DIR}/third_party/aom/lib/mingw)
+endif (MINGW)
 if (UNIX AND NOT APPLE)
 link_directories(${PROJECT_SOURCE_DIR}/third_party/aom/lib/linux)
 endif(UNIX AND NOT APPLE)
@@ -64,7 +67,7 @@ else()
     set (SvtAv1EncLib SvtAv1EncStatic)
 endif()
 
-if (UNIX)
+if (UNIX OR MINGW)
         
   # App Source Files
     add_executable (SvtAv1E2ETests 
@@ -80,6 +83,11 @@ if (UNIX)
                       COMMAND ${CMAKE_COMMAND} -E copy
                            ${PROJECT_SOURCE_DIR}/third_party/aom/lib/linux/* ${PROJECT_SOURCE_DIR}/Bin/${CMAKE_BUILD_TYPE}/)
     endif(UNIX AND NOT APPLE)
+    if (MINGW)
+      add_custom_command(TARGET SvtAv1E2ETests POST_BUILD
+                      COMMAND ${CMAKE_COMMAND} -E copy
+                           ${PROJECT_SOURCE_DIR}/third_party/aom/lib/mingw/* ${PROJECT_SOURCE_DIR}/Bin/${CMAKE_BUILD_TYPE}/)
+    endif(UNIX AND NOT APPLE)
 
     # Link the Encoder App
      target_link_libraries (SvtAv1E2ETests
@@ -91,7 +99,7 @@ if (UNIX)
         
 endif(UNIX)
 
-if (MSVC OR MSYS OR MINGW OR WIN32)
+if ((MSVC OR MSYS OR WIN32) AND NOT MINGW)
 
     set (lib_list ${SvtAv1EncLib} gtest_all)
                         
@@ -103,7 +111,7 @@ if (MSVC OR MSYS OR MINGW OR WIN32)
     set_target_properties(SvtAv1E2ETests
                         PROPERTIES
                         COMPILE_DEFINITIONS "GTEST_LINKED_AS_SHARED_LIBRARY=1")
-endif(MSVC OR MSYS OR MINGW OR WIN32)
+endif ((MSVC OR MSYS OR WIN32) AND NOT MINGW)
 
 install(TARGETS SvtAv1E2ETests RUNTIME DESTINATION bin)
 

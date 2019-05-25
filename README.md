@@ -112,6 +112,26 @@ The SVT-AV1 Encoder library supports the x86 architecture
   - Run the sample application to encode: `./SvtAv1EncApp -i [in.yuv] -w [width] -h [height] -b [out.ivf]`
   - Sample application supports reading from pipe. E.g. `ffmpeg -i [input.mp4] -nostdin -f rawvideo -pix_fmt yuv420p - | ./SvtAv1EncApp -i stdin -n [number_of_frames_to_encode] -w [width] -h [height]`
 
+### MinGW* Operating Systems (64-bit):
+
+* __Build Requirements__
+     -    GCC 5.4.0 or later
+     -    CMake 3.5.1 or later
+     -    YASM Assembler version 1.2.0 or later
+
+* __Build Instructions__
+	 -	./Build/linux/build.sh -c x86_64-w64-mingw32- -s Windows <release | debug> (if none specified, both release and debug will be built)
+
+
+* __Sample Binaries location__
+     -    Binaries can be found under Bin/Release and / or Bin/Debug
+
+* __Installation__
+-    For the binaries to operate properly on your system, the following conditions have to be met:
+    -    Copy the binaries to a location making sure that both the sample application "SvtAv1EncApp.exe” and library "SvtAv1Enc.dll” are in the same folder.
+    -    Open the command prompt window at the chosen location and run the sample application to encode. SvtAV1EncApp.exe -i [in.yuv] -w [width] -h [height] -b [out.ivf].
+    -    Sample application supports reading from pipe. E.g. ffmpeg -i [input.mp4] -nostdin -f rawvideo -pix_fmt yuv420p - | SvtAv1EncApp.exe -i stdin -n [number_of_frames_to_encode] -w [width] -h [height].
+
 ## Demo features and limitations
 
 -  **Multi-instance support:** The multi-instance functionality is a demo feature implemented in the SVT-AV1 Encoder sample application as an example of one sample application using multiple encoding libraries. Encoding using the multi-instance support is limited to only 6 simultaneous streams. For example two channels encoding on Windows: `SvtAV1EncApp.exe -nch 2 -c firstchannel.cfg secondchannel.cfg`
